@@ -68,27 +68,28 @@ foreach ($id in $serverIds) {
         }
 
         $results += $result
+
+        # Очистка и заголовок — прямо в цикле
+        Clear-Host
+        Write-Host "`n=== Результаты тестирования скорости Speedtest.net Ookla ===`n" -ForegroundColor Cyan
+
+        # Пошаговый вывод всех накопленных результатов
+        foreach ($r in $results) {
+            $pingColor = if ($r."Пинг (мс)" -gt 20) { "Red" } else { "White" }
+
+            Write-Host ("ID сервера:          {0}" -f $r."ID сервера")
+            Write-Host ("Провайдер:           {0}" -f $r."Провайдер")
+            Write-Host ("Локация:             {0}" -f $r."Локация")
+            Write-Host ("Пинг (мс):           ") -NoNewline
+            Write-Host ("{0}" -f $r."Пинг (мс)") -ForegroundColor $pingColor
+            Write-Host ("⬇ Загрузка (Мбит/с): {0}" -f $r."⬇ Загрузка (Мбит/с)")
+            Write-Host ("⬆ Отдача (Мбит/с):   {0}" -f $r."⬆ Отдача (Мбит/с)")
+            Write-Host ("-----------------------------")
+        }
     }
     else {
         Write-Warning "Ошибка при тестировании сервера ID $id"
     }
 
     Start-Sleep -Seconds 1
-}
-
-# Очистка экрана и вывод всех результатов
-Clear-Host
-Write-Host "`n=== Сводка результатов Speedtest.net Ookla ===`n" -ForegroundColor Cyan
-
-foreach ($r in $results) {
-    $pingColor = if ($r."Пинг (мс)" -gt 20) { "Red" } else { "White" }
-
-    Write-Host ("ID сервера:          {0}" -f $r."ID сервера")
-    Write-Host ("Провайдер:           {0}" -f $r."Провайдер")
-    Write-Host ("Локация:             {0}" -f $r."Локация")
-    Write-Host ("Пинг (мс):           ") -NoNewline
-    Write-Host ("{0}" -f $r."Пинг (мс)") -ForegroundColor $pingColor
-    Write-Host ("⬇ Загрузка (Мбит/с): {0}" -f $r."⬇ Загрузка (Мбит/с)")
-    Write-Host ("⬆ Отдача (Мбит/с):   {0}" -f $r."⬆ Отдача (Мбит/с)")
-    Write-Host ("-----------------------------")
 }
