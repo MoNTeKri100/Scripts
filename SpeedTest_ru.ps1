@@ -1,5 +1,32 @@
-﻿# Путь к speedtest.exe
-$speedtestPath = "C:\Windows\System32\speedtest.exe"
+# Функция для установки speedtest-cli
+function Install-SpeedTest {
+    if (-not (Test-Path ".\speedtest.exe")) {
+        Write-Host "Установка Speedtest CLI..." -ForegroundColor Yellow
+        
+        # Определяем архитектуру
+        $arch = if ([Environment]::Is64BitOperatingSystem) { "win64" } else { "win32" }
+        $url = "https://install.speedtest.net/app/cli/ookla-speedtest-1.2.0-$arch.zip"
+        
+        try {
+            # Скачиваем и распаковываем
+            Invoke-WebRequest -Uri $url -OutFile "speedtest.zip"
+            Expand-Archive -Path "speedtest.zip" -DestinationPath . -Force
+            Remove-Item "speedtest.zip" -Force
+            
+            # Находим и переименовываем exe файл
+            Get-ChildItem -Path ".\speedtest-*" -Include "speedtest.exe" | 
+                Rename-Item -NewName "speedtest.exe" -Force
+            
+            Write-Host "Speedtest CLI успешно установлен" -ForegroundColor Green
+        } catch {
+            Write-Host "Ошибка при установке Speedtest CLI: $_" -ForegroundColor Red
+            exit 1
+        }
+    }
+}
+ 
+ # Путь к speedtest.exe
+ # $speedtestPath = "C:\Windows\System32\speedtest.exe"
 
 # Список ID серверов
 $serverIds = @(49870,5768,39860,1907,4247,4718,65484,17039,20200,2732,2661,21456,2697,44144,6827,44487,32983,1348,28922)  # Замени на нужные ID
