@@ -47,7 +47,12 @@ Clear-Host
 # Заголовок таблицы
 Write-Host "`n=== Результаты тестирования скорости Speedtest.net Ookla® ===`n" -ForegroundColor Cyan
 $headerFormat = "{0,-10} {1,-20} {2,-20} {3,-10} {4,-15} {5,-15}"
-Write-Host ($headerFormat -f "ID сервера", "Провайдер", "Локация", "Пинг (мс)", "⬇ Загрузка", "⬆ Отдача")
+$headerLine = $headerFormat -f "ID сервера", "Провайдер", "Локация", "Пинг (мс)", "↓ Загрузка", "↑ Отдача"
+Write-Host $headerLine
+
+# Подчеркивание шапки
+$underline = "-" * $headerLine.Length
+Write-Host $underline
 
 foreach ($id in $serverIds) {
     try {
@@ -58,23 +63,23 @@ foreach ($id in $serverIds) {
         $uploadMbps   = [math]::Round($data.upload.bandwidth * 8 / 1MB, 2)
         $ping = [math]::Round($data.ping.latency, 2)
 
-        $line = $headerFormat -f $id, $data.server.name, $data.server.location, $ping, "⬇ $downloadMbps", "⬆ $uploadMbps"
+        $line = $headerFormat -f $id, $data.server.name, $data.server.location, $ping, "↓ $downloadMbps", "↑ $uploadMbps"
 
         # Логика отображения
         if ($ping -gt 50 -and $downloadMbps -lt $maxDownloadMbps) {
-            # Пинг высокий и загрузка ниже максимума — фон красный, текст черный
+            # Пинг высокий и загрузка ниже максимума - фон красный, текст черный
             Write-Host $line -BackgroundColor Red -ForegroundColor Black
         }
         elseif ($ping -gt 50) {
-            # Только пинг высокий — фон красный, текст белый
+            # Только пинг высокий - фон красный, текст белый
             Write-Host $line -BackgroundColor Red -ForegroundColor White
         }
         elseif ($ping -le 50 -and $downloadMbps -lt $thresholdDownload) {
-            # Пинг нормальный, но загрузка ниже 80% — белый текст
-            Write-Host $line -ForegroundColor White
+            # Пинг нормальный, но загрузка ниже 80% - фон красный, текст желтый
+            Write-Host $line -BackgroundColor Red -ForegroundColor Yellow
         }
         else {
-            # Всё в пределах нормы — стандартный цвет
+            # Всё в пределах нормы - стандартный цвет
             Write-Host $line
         }
     } catch {
