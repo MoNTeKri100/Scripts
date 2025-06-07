@@ -3,7 +3,7 @@ $speedtestPath = ".\speedtest.exe"
 
 # Запрос максимальной скорости загрузки у пользователя
 do {
-    $maxDownloadInput = Read-Host "Введите максимально допустимую скорость загрузки в Мбит/с"
+    $maxDownloadInput = Read-Host "Enter provider speed DOWNLOAD Mbit/s"
 } while (-not [double]::TryParse($maxDownloadInput, [ref]$null))
 
 $maxDownloadMbps = [double]$maxDownloadInput
@@ -12,7 +12,7 @@ $thresholdDownload = $maxDownloadMbps * 0.8  # 80% от максимальной
 # Функция установки Speedtest CLI
 function Install-SpeedTest {
     if (-not (Test-Path $speedtestPath)) {
-        Write-Host "Установка Speedtest CLI..." -ForegroundColor Yellow
+        Write-Host "Intsall Speedtest CLI..." -ForegroundColor Yellow
 
         $arch = if ([Environment]::Is64BitOperatingSystem) { "win64" } else { "win32" }
         $url = "https://install.speedtest.net/app/cli/ookla-speedtest-1.2.0-$arch.zip"
@@ -28,9 +28,9 @@ function Install-SpeedTest {
                 Remove-Item $exePath.DirectoryName -Recurse -Force
             }
 
-            Write-Host "Speedtest CLI успешно установлен." -ForegroundColor Green
+            Write-Host "Speedtest CLI install OK." -ForegroundColor Green
         } catch {
-            Write-Host "Ошибка при установке Speedtest CLI: $_" -ForegroundColor Red
+            Write-Host "ERROR Install Speedtest CLI: $_" -ForegroundColor Red
             exit 1
         }
     }
@@ -45,9 +45,9 @@ $serverIds = @(49870,5768,39860,1907,4247,4718,65484,17039,20200,2732,2661,21456
 Clear-Host
 
 # Заголовок таблицы
-Write-Host "`n=== Результаты тестирования скорости Speedtest.net Ookla® ===`n" -ForegroundColor Cyan
+Write-Host "`n======================= Speedtest.net Ookla® =========================`n" -ForegroundColor Cyan
 $headerFormat = "{0,-10} {1,-20} {2,-20} {3,-10} {4,-15} {5,-15}"
-$headerLine = $headerFormat -f "ID сервера", "Провайдер", "Локация", "Пинг (мс)", "↓ Загрузка", "↑ Отдача"
+$headerLine = $headerFormat -f "ID server", "Provider", "Location", "Ping (мс)", "↓ Download", "↑ Upload"
 Write-Host $headerLine
 
 # Подчеркивание шапки
@@ -83,10 +83,10 @@ foreach ($id in $serverIds) {
             Write-Host $line
         }
     } catch {
-        Write-Warning "Ошибка при тестировании сервера ID $id"
+        Write-Warning "ERROR Testin server ID $id"
     }
 
     Start-Sleep -Seconds 2
 }
 
-Write-Host "`nТестирование завершено." -ForegroundColor Cyan
+Write-Host "`nEND TESTING." -ForegroundColor Cyan
