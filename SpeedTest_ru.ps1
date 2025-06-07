@@ -47,7 +47,7 @@ Clear-Host
 # Заголовок таблицы
 Write-Host "`n======================= Speedtest.net Ookla® =========================`n" -ForegroundColor Cyan
 $headerFormat = "{0,-10} {1,-20} {2,-20} {3,-10} {4,-15} {5,-15}"
-$headerLine = $headerFormat -f "ID server", "Provider", "Location", "Ping (мс)", "↓ Download", "↑ Upload"
+$headerLine = $headerFormat -f "ID server", "Provider", "Location", "Ping (мс)", "↓Download", "↑Upload"
 Write-Host $headerLine
 
 # Подчеркивание шапки
@@ -63,7 +63,7 @@ foreach ($id in $serverIds) {
         $uploadMbps   = [math]::Round($data.upload.bandwidth * 8 / 1MB, 2)
         $ping = [math]::Round($data.ping.latency, 2)
 
-        $line = $headerFormat -f $id, $data.server.name, $data.server.location, $ping, "↓ $downloadMbps", "↑ $uploadMbps"
+        $line = $headerFormat -f $id, $data.server.name, $data.server.location, $ping, "↓$downloadMbps", "↑$uploadMbps"
 
         # Логика отображения
         if ($ping -gt 50 -and $downloadMbps -lt $maxDownloadMbps) {
