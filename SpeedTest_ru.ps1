@@ -47,7 +47,7 @@ Clear-Host
 # Заголовок таблицы
 Write-Host "`n======================= Speedtest.net Ookla® =========================`n" -ForegroundColor Cyan
 $headerFormat = "{0,-10} {1,-20} {2,-20} {3,-10} {4,-15} {5,-15}"
-$headerLine = $headerFormat -f "ID server", "Provider", "Location", "Ping (ms)", "Download", "Upload"
+$headerLine = $headerFormat -f "ID server", "Provider", "Location", "Ping (ms)", "Download (Mbit/s)", "Upload (Mbit/s)"
 Write-Host $headerLine
 
 # Подчеркивание шапки
